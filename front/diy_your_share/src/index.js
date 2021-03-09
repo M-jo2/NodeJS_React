@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css'
-
+import './index.css';
+import Client from './Client';
+import ClientForm from './ClientForm';
 
 class App extends React.Component{
   state = {
@@ -9,8 +10,7 @@ class App extends React.Component{
         {id:1 , nom:'Joachim Munoz'},
         {id:2 , nom:'Marcelo Faccioni'},
         {id:3 , nom:'Jean Custom'}
-      ],
-    newClient : ''
+      ]
   }
   
   deleteClient = id =>{
@@ -20,37 +20,24 @@ class App extends React.Component{
     this.setState({clients : copyClients});
     console.log(index)
   }
-
-  addClient = event =>{
-    event.preventDefault();
+  
+  addClient = newClient =>{
     const copyClients = this.state.clients.slice();
-    const nom = this.state.newClient;
-    const id = new Date().getTime();
-    copyClients.push({id:id,nom:nom});
+    copyClients.push({id:newClient.id,nom:newClient.nom});
     this.setState({clients : copyClients , newClient : ''});
-  }
-
-  writeClient = event =>{
-    const newClientTemp= event.currentTarget.value;
-    this.setState({newClient:newClientTemp})
   }
 
   render(){
     return(
       <div>
       <h1>Liste clients :</h1>
-        {this.state.clients.map(client =>{
-          return <h3>{client.nom}  <button onClick={()=>this.deleteClient(client.id)}>X</button> </h3>
-        })}
-
-      <form onSubmit={this.addClient}>
-        <input value={this.state.newClient} onChange={this.writeClient} type="text" placeholder="entrer le nom d'un client..." ></input>
-        <button>Ajouter</button> 
-      </form>
+        {this.state.clients.map(client =>  <Client details={client} OnDelete={this.deleteClient}/>   )   }
+        <ClientForm addClient={this.addClient}/>
       </div>
     );
   }
 }
+
 
 ReactDOM.render(
   <App/>, 
